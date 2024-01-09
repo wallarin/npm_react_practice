@@ -1,17 +1,31 @@
 import Button from "./Button";
 import styles from "./App.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+function Hello() {
+  const byFn = () => {
+    console.log("destroyed :(");
+  }
+  const hiFn = () => {
+    console.log("Created :)");
+    return byFn;
+  }
+  useEffect(() => {
+    console.log("hi :)")
+    return () => {
+      console.log("bye :(")
+    }
+  }, [])
+  return <h1>Hello</h1>;
+}
 
 function App() {
-  const [counter, setValue] = useState(0);
-  const onClick = () => setValue((prev) => prev + 1);
-  console.log("call an api");
-  return (
-    <div>
-      <h1>{counter}</h1>
-      <button onClick={onClick}>Click me</button>
-    </div>
-  );
+  const [showing,setShowing] = useState(false);
+  const onClick = () => setShowing((prev) => !prev)
+  return <div>
+    { showing ? <Hello /> : null }
+    <button onClick={onClick}>{showing ? "Hide" : "Show"}</button>
+  </div>;
 }
 
 export default App;
