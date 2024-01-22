@@ -1,50 +1,49 @@
-import Button from "./Button";
-import styles from "./App.module.css";
 import { useState, useEffect } from "react";
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const [coins, setCoins] = useState([]);
-  const [selectedCoin, setSelectedCoin] = useState("");
-  const [USD,setUSD] = useState(0);
-
-  const input_value = (event) => {
-    setUSD(event.target.value)
-  }
-
-  const onChange = (event) => {
-    const selectedCoin = (coins.find(coin => coin.symbol === event.target.value)).quotes.USD.price;
-    setSelectedCoin(selectedCoin)
-    setUSD(0)
-  }
-  
+  const [movies, setMovies] = useState([]);
+  const getMovies = async() => {
+    const json = await (
+      await fetch(
+        `https://yts.mx/api/v2/list_movies.json?minimum_rating=8.5&sort_by=year`
+      )
+    ).json();
+    setMovies(json.data.movies);
+    setLoading(false);
+  };
   useEffect(() => {
-    fetch("https://api.coinpaprika.com/v1/tickers?limit=10")
-    .then((response) => response.json())
-    .then((json) => {
-      setCoins(json)
-      setLoading(false);
-    })
+    getMovies();
+    //fetch(`https://yts.mx/api/v2/list_movies.json?minimum_rating=8.5&sort_by=year`)
+    // 요즘에는 then을 잘 사용하지 않는다 대신 async-await을 주로 사용한다.
+    // .then((response) => response.json())
+    // .then((json) => {
+    //   setMovies(json.data.movies);
+    //   setLoading(false);
+    // })
   }, [])
+  console.log(movies)
   return (
-  <div>
-    <h1>The Coins {loading ? "" : `(${coins.length})`}</h1>
-    
-    {loading ? <strong>Loading...</strong> : 
-    <select onChange={onChange}>
-      {coins.map((coin, index) => <option key={coin.symbol} value={coin.symbol} selected={index === 0 ? "selected" : null}>{coin.name} ({coin.symbol}): {coin.quotes.USD.price} USD</option>)}
-    </select>}
     <div>
-      <input 
-        onChange={input_value}
-        type="number" 
-        min="0" 
-        placeholder="You can buy ($ => BTC)" 
-        value={USD}
-      />
-      <div>Result : {selectedCoin > 0 ? USD / selectedCoin : ""}</div>
+      {loading ? (
+        <h1>Loading...</h1>
+      ) : (
+        <div>
+          {movies.map(movie => (
+            <div key={movie.id}>
+              <img alt={movie.title + " img"} src={movie.medium_cover_image} />
+              <h2>{movie.title}</h2>
+              <p>{movie.summary}</p>
+              <ul>
+                {movie.genres.map((g) => (
+                  <li key={g}>{g}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
-  </div>
   );
 }
 
