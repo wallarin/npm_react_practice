@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.js": "/movie-build/static/js/main.57b043dd.js",
-    "index.html": "/movie-build/index.html",
-    "main.57b043dd.js.map": "/movie-build/static/js/main.57b043dd.js.map"
+    "main.js": "/npm_react_practice/static/js/main.57b043dd.js",
+    "index.html": "/npm_react_practice/index.html",
+    "main.57b043dd.js.map": "/npm_react_practice/static/js/main.57b043dd.js.map"
   },
   "entrypoints": [
     "static/js/main.57b043dd.js"
